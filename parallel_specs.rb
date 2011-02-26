@@ -21,14 +21,19 @@ end.parse!
 Dir.chdir options[:path] if options.has_key? :path
 features = options[:features] || Dir.glob("**/*.feature")
 
-procs = features.map do |f|
+processes = features.map do |f|
   puts "Starting #{f}"
   IO.popen("cucumber " + f)
 end
 
-results = Array.new(procs.length)
-collectors = procs.map {|r| Thread.start {results[procs.index(r)] = r.readlines}}
-collectors.each {|c| c.join}
+begin
+  results = Array.new(processes.length)
+  collectors = processes.map {|r| Thread.start {results[processes.index(r)] = r.readlines}}
+  collectors.each {|c| c.join}
+  results.each { |r| puts "", r }
+rescue SystemExit, Interrupt
+  processes.each{|p| p.close}
+  raise
+end
 
-results.each { |r| puts "", r }
 
