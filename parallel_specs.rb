@@ -28,7 +28,7 @@ end
 
 results = Array.new(procs.length)
 collectors = procs.map {|r| Thread.start {results[procs.index(r)] = r.readlines}}
-collectors.each{|c| c.run}.each {|c| c.join}
+collectors.each {|c| c.join}
 
 results.each { |r| puts "", r }
 
