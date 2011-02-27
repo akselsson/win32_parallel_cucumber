@@ -26,6 +26,12 @@ OptionParser.new do |opts|
   end
 end.parse!
 
+start = Time.now
 result = ParallelCucumber.run(options)
 puts result[:lines]
-exit 1 unless result[:passed?]
+
+puts ""
+puts "Total time: #{Time.now - start} seconds"
+
+puts ""
+abort "Failed:\n#{result[:failures].join('\n')}" unless result[:passed?]

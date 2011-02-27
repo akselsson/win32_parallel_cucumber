@@ -28,4 +28,9 @@ describe 'parallel_cucumber' do
     run({:features => ["features/fail.feature"]})
     @results[:passed?].should be_false
   end
+
+  it 'should forward failure names from features' do
+    run({:features => ["features/fail.feature"]})
+    @results[:failures].should == ["features/fail.feature"]
+  end
 end

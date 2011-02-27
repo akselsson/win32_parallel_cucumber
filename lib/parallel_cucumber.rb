@@ -7,10 +7,13 @@ class ParallelCucumber
 
     begin
       features.each {|f| puts "Running #{f}" }
-      processes = features.map { |f| BackgroundTask.start("cucumber #{f} #{extra_arguments}") }
+      processes = features.map { |f| BackgroundTask.start("cucumber #{f} #{extra_arguments}",f) }
       processes.each{|p| p.wait_for_exit}
-      {:lines => processes.map{|p| p.output}.flatten,
-      :passed? => processes.all?{|p| p.status == :success}}
+      {
+        :lines => processes.map{|p| p.output}.flatten,
+        :passed? => processes.all?{|p| p.status == :success},
+        :failures => processes.select{|p| p.status != :success}.map{|p| p.name}
+      }
     rescue SystemExit, Interrupt
       processes.each { |p| p.close }
       raise
