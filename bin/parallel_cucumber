@@ -1,3 +1,29 @@
 #!/usr/bin/env ruby
-
+$LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'parallel_cucumber'
+require 'optparse'
+
+options = {
+}
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{__FILE__} [options]"
+
+  opts.on("-p v", "--path v", "Feature path") do |v|
+    options[:path] = v
+  end
+
+  opts.on("--features x,y,z",Array,"Features") do |f|
+    options[:features] = f
+  end
+
+  opts.on("--args args","Arguments passed to cucumber") do |args|
+    options[:extra_arguments] = args
+  end
+
+  opts.on("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+ParallelCucumber.run(options)
