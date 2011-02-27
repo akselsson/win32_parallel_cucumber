@@ -26,4 +26,6 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-ParallelCucumber.run(options)
+result = ParallelCucumber.run(options)
+puts result[:lines]
+exit 1 unless result[:passed?]

@@ -22,10 +22,10 @@ describe 'parallel_cucumber' do
   end
   it 'should forward success from features' do
     run({:features => ["features/fast.feature"]})
-    @results[:status].should == :success
+    @results[:passed?].should be_true
   end
   it 'should forward failure from features' do
     run({:features => ["features/fail.feature"]})
-    @results[:status].should == :failed
+    @results[:passed?].should be_false
   end
 end
