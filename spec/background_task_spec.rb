@@ -6,6 +6,11 @@ describe BackgroundTask do
     @task = BackgroundTask.start(command)
     @task.wait_for_exit
   end
+
+  after(:each) do
+    @task.close if @task
+  end
+
   it "should return one line from echo" do
     run "echo test"
     @task.output.should include("test")
@@ -28,7 +33,16 @@ describe BackgroundTask do
   it "should have no lines until command is finished" do
     @task = BackgroundTask.start(%(ruby -e 'sleep 1'))
     @task.output.should_not be
-    @task.wait_for_exit
-    @task.output.should be
+  end
+
+  it "should be pemding unitl command is finished" do
+    @task = BackgroundTask.start(%(ruby -e 'sleep 1'))
+    @task.status.should == :pending
+  end
+
+  it "should be aborted if closed before command is finished" do
+    @task = BackgroundTask.start(%(ruby -e 'sleep 1'))
+    @task.close
+    @task.status.should == :aborted
   end
 end
