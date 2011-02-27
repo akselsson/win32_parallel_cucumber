@@ -1,3 +1,6 @@
 Proof of concept for running cucumber features in parallel on windows. 
 
 Inspired by parallel_tests (https://github.com/grosser/parallel_tests).
+
+Usage:
+parallel_cucumber.rb -p path-to-project-root
